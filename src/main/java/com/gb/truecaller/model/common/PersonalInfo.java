@@ -11,4 +11,5 @@ public class PersonalInfo {
     private String middleName;
     private String initials;
     private String dob;
+    private Gender gender;
 }

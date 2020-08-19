@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Contact {
+    private String countryCode;
     private String phone;
     private String email;
     private Address address;

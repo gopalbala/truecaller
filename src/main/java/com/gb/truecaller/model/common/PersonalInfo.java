@@ -12,6 +12,7 @@ public class PersonalInfo {
     private String initials;
     private String dob;
     private Gender gender;
-    private Tag tag;
-
+    private Address address;
+    private String companyName;
+    private String title;
 }

@@ -1,5 +1,6 @@
 package com.gb.truecaller.model;
 
+import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.common.SocialInfo;
 import com.gb.truecaller.model.common.Tag;
@@ -20,4 +21,5 @@ public abstract class Account {
     private Contact contact;
     private PersonalInfo personalInfo;
     private SocialInfo socialInfo;
+    private Business business;
 }

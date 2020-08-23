@@ -1,4 +1,4 @@
-package com.gb.truecaller.model;
+package com.gb.truecaller.model.common;
 
 import lombok.Getter;
 import lombok.Setter;

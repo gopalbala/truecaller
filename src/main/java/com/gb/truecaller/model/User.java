@@ -16,13 +16,15 @@ import static com.gb.truecaller.model.common.Constant.*;
 public class User extends Account {
     private ContactTrie contactTrie = ContactTrie.CONTACT_TRIE;
 
-    public User(){}
+    public User() {
+    }
+
     public User(String phoneNumber, String firstName) {
         super(phoneNumber, firstName);
     }
 
     public User(String phoneNumber, String firstName, String lastName) {
-        super(phoneNumber,firstName, lastName);
+        super(phoneNumber, firstName, lastName);
     }
 
     public void register(UserType userType, String userName, String password, String email, String phoneNumber, String countryCode) {
@@ -115,6 +117,19 @@ public class User extends Account {
     public boolean canReceive(String number) {
         return !isBlocked(number) &&
                 !GlobalSpam.INSTANCE.isGlobalSpam(number);
+    }
+
+    @Override
+    public boolean importContacts(List<User> users) {
+        for (User user : users) {
+            try {
+                addConcat(user);
+            } catch (ContactsExceededException cee) {
+                System.out.println("Some of the contact could not be imported as limit exceeded");
+                return false;
+            }
+        }
+        return true;
     }
 
     private void upgradeBlockedContact(int blockedCount) {

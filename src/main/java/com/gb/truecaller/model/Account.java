@@ -60,4 +60,6 @@ public abstract class Account {
     public abstract boolean isBlocked(String number);
     public abstract boolean canReceive(String number);
 
+    public abstract boolean importContacts(List<User> users);
+
 }

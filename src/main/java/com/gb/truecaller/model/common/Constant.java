@@ -2,7 +2,7 @@ package com.gb.truecaller.model.common;
 
 public class Constant {
     public static final int MAX_FREE_USER_CONTACTS = 10_000;
-    public static final int MAX_FREE_USER_BLOCKED_CONTACTS = 100;
+        public static final int MAX_FREE_USER_BLOCKED_CONTACTS = 100;
 
     public static final int MAX_GOLD_USER_CONTACTS = 100_000;
     public static final int MAX_GOLD_USER_BLOCKED_CONTACTS = 1000;

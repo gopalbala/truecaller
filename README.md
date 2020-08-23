@@ -1,6 +1,6 @@
 # True caller
 
-## Design True caller / WhosCall/ Showcaller
+## Design True caller / WhosCall / Showcaller
 
 Come up with application that can perform  
 * Caller identification  
@@ -22,3 +22,10 @@ Come up with application that can perform
 10. Users should be able to search for contacts by name 
 11. Users should be able to search for contacts by number
 12. Users should be able to add business 
+
+### Test cases
+
+### Credits
+Orestes-Bloomfilter - https://github.com/Baqend/Orestes-Bloomfilter  
+Guava BloomFilter  
+

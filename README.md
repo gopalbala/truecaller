@@ -6,7 +6,8 @@ Come up with application that can perform
 * Caller identification  
 * Call blocking  
 * Spam Detection
-* Store users contacts   
+* Store users contacts  
+* Search for users contacts by name and number 
 
 ### Use cases
 

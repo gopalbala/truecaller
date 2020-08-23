@@ -1,5 +1,6 @@
 package com.gb.truecaller;
 
+import com.gb.truecaller.exception.BlockLimitExceededException;
 import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.Account;
 import com.gb.truecaller.model.User;
@@ -10,7 +11,7 @@ import com.gb.truecaller.model.tries.TrieNode;
 import java.util.List;
 
 public class TrueCallerApplication {
-    public static void main(String[] args) throws ContactsExceededException {
+    public static void main(String[] args) throws ContactsExceededException, BlockLimitExceededException {
 
         //Test case 1: Create user and register
         Account account1 = new User();
@@ -75,5 +76,26 @@ public class TrueCallerApplication {
         for (String n: names) {
             System.out.println(n);
         }
+
+        account1.addConcat(new User("3949345003","Blocked caller1"));
+        account1.addConcat(new User("4953904850","Blocked caller2"));
+        account1.addConcat(new User("2782348999","Junk caller3"));
+
+        System.out.println("*****");
+        //Test case 7: Block a number
+        account1.blockNumber("3949345003");
+        System.out.println(account1.isBlocked("3949345003"));
+
+        //Test case 8: should not receive call from blocked caller
+        System.out.println( account1.canReceive("3949345003"));
+
+        System.out.println("*****");
+        //Test case 9: Unblock number
+        account1.unblockNumber("3949345003");
+        System.out.println(account1.isBlocked("3949345003"));
+
+        //Test case 10: should receive call from un blocked caller
+        System.out.println( account1.canReceive("3949345003"));
+
     }
 }

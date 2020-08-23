@@ -70,6 +70,15 @@ public class User extends Account {
         upgradeBlockedContact(blockedCount);
     }
 
+    public boolean isBlocked(String number) {
+        return getBlockedContacts().contains(number);
+    }
+
+    public boolean canReceive(String number) {
+        return !isBlocked(number) &&
+         !GlobalSpam.INSTANCE.isSpam(number);
+    }
+
     private void upgradeBlockedContact(int blockedCount) {
         setBlockedContacts(new FilterBuilder(blockedCount, .01)
                 .buildCountingBloomFilter());

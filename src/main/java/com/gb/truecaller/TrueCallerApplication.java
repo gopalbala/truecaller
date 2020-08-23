@@ -16,7 +16,7 @@ public class TrueCallerApplication {
         //Test case 1: Create user and register
         Account account1 = new User();
         account1.register(UserType.FREE,"u1","pwd",
-                "u1@email.com","6826999256", "91");
+                "u1@email.com","6826999256", "91", "u1");
 
         // Test case 2: Add contacts to user
         account1.addConcat(new User("9140107431","mahadev"));
@@ -108,8 +108,8 @@ public class TrueCallerApplication {
         System.out.println(GlobalSpam.INSTANCE.isGloballyBlocked("2782348999"));
 
         Account account2 = new User();
-        account1.register(UserType.FREE,"u2","pwd",
-                "u2@email.com","6826999256", "91");
+        account2.register(UserType.FREE,"u2","pwd",
+                "u2@email.com","6826999256", "91", "u2");
 
         // Test case 13: Add contacts to user
         account2.addConcat(new User("7373048205","anil"));
@@ -135,7 +135,12 @@ public class TrueCallerApplication {
 
         account1.setBusiness(business);
 
-
+        //Test case 15: getting contacts from global
+        System.out.println("******** Searching from global directory ******");
+        names = GlobalContacts.INSTANCE.getContactTrie().allWordsWithPrefix("u2");
+        for (String s: names){
+            System.out.println(s);
+        }
 
     }
 }

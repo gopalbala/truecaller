@@ -6,6 +6,7 @@ import com.gb.truecaller.exception.ContactDoesNotExistsException;
 import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.GlobalSpam;
+import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.tries.ContactTrie;
 import orestes.bloomfilter.FilterBuilder;
 
@@ -28,13 +29,16 @@ public class User extends Account {
         super(phoneNumber, firstName, lastName);
     }
 
-    public void register(UserType userType, String userName, String password, String email, String phoneNumber, String countryCode) {
+    public void register(UserType userType, String userName, String password, String email,
+                         String phoneNumber, String countryCode, String firstName) {
         setId(UUID.randomUUID().toString());
         setUserType(userType);
         setUserName(userName);
         setPassword(password);
-        setContact(new Contact(phoneNumber,email, countryCode));
+        setContact(new Contact(phoneNumber, email, countryCode));
+        setPersonalInfo(new PersonalInfo(firstName));
         init(userType);
+        insertToTries(phoneNumber, firstName);
     }
 
     private void init(UserType userType) {
@@ -64,7 +68,7 @@ public class User extends Account {
     public void addConcat(User user) throws ContactsExceededException {
         checkAddUser();
         getContacts().putIfAbsent(user.getPhoneNumber(), user);
-        insertToTries(user);
+        insertToTries(user.getPhoneNumber(), user.getPersonalInfo().getFirstName());
     }
 
     public void removeContact(String number) throws ContactDoesNotExistsException {
@@ -175,10 +179,10 @@ public class User extends Account {
         }
     }
 
-    private void insertToTries(User user) {
-        getContactTrie().insert(user.getPhoneNumber());
-        getContactTrie().insert(user.getPersonalInfo().getFirstName());
-        GlobalContacts.INSTANCE.getContactTrie().insert(user.getPhoneNumber());
-        GlobalContacts.INSTANCE.getContactTrie().insert(user.getPersonalInfo().getFirstName());
+    private void insertToTries(String phoneNumber, String firstName) {
+        getContactTrie().insert(phoneNumber);
+        getContactTrie().insert(firstName);
+        GlobalContacts.INSTANCE.getContactTrie().insert(phoneNumber);
+        GlobalContacts.INSTANCE.getContactTrie().insert(firstName);
     }
 }

@@ -15,4 +15,8 @@ public class PersonalInfo {
     private Address address;
     private String companyName;
     private String title;
+
+    public PersonalInfo(String firstName) {
+        this.setFirstName(firstName);
+    }
 }

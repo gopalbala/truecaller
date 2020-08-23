@@ -42,8 +42,7 @@ public abstract class Account {
 
     public Account(String phoneNumber, String firstName) {
         this.phoneNumber = phoneNumber;
-        this.personalInfo = new PersonalInfo();
-        this.personalInfo.setFirstName(firstName);
+        this.personalInfo = new PersonalInfo(firstName);
     }
 
     public Account(String phoneNumber, String firstName, String lastName) {
@@ -52,7 +51,8 @@ public abstract class Account {
     }
 
     public abstract void register(UserType userType, String userName, String password,
-                                  String email, String phoneNumber, String countryCode);
+                                  String email, String phoneNumber, String countryCode,
+                                  String firstName);
     public abstract void addConcat(User user) throws ContactsExceededException;
     public abstract void removeContact(String number) throws ContactDoesNotExistsException;
     public abstract void blockNumber(String number) throws BlockLimitExceededException;

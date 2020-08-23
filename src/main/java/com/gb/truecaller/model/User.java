@@ -5,6 +5,12 @@ import com.gb.truecaller.exception.ContactDoesNotExistsException;
 import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.common.GlobalSpam;
 import com.gb.truecaller.model.tries.ContactTrie;
+import orestes.bloomfilter.FilterBuilder;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static com.gb.truecaller.model.common.Constant.*;
 
@@ -47,30 +53,65 @@ public class User extends Account {
         GlobalSpam.INSTANCE.reportSpam(number);
     }
 
+    public void upgrade(UserType userType) {
+        int count = 0;
+        int blockedCount = 0;
+        switch (userType) {
+            case GOLD:
+                count = MAX_GOLD_USER_CONTACTS;
+                blockedCount = MAX_GOLD_USER_BLOCKED_CONTACTS;
+                break;
+            case PLATINUM:
+                count = MAX_PLATINUM_USER_CONTACTS;
+                blockedCount = MAX_PLATINUM_USER_BLOCKED_CONTACTS;
+                break;
+        }
+        upgradeContacts(count);
+        upgradeBlockedContact(blockedCount);
+    }
+
+    private void upgradeBlockedContact(int blockedCount) {
+        setBlockedContacts(new FilterBuilder(blockedCount, .01)
+                .buildCountingBloomFilter());
+        Set<String> upgradedSet = new HashSet<>();
+        for (String blocked: getBlockedSet()) {
+            upgradedSet.add(blocked);
+            getBlockedContacts().add(blocked);
+        }
+    }
+
+    private void upgradeContacts(int count) {
+        Map<String, User> upgradedContacts = new HashMap<>(count);
+        for (Map.Entry<String, User> entry : getContacts().entrySet()) {
+            upgradedContacts.putIfAbsent(entry.getKey(), entry.getValue());
+        }
+        setContacts(upgradedContacts);
+    }
+
     private void checkAddUser() throws ContactsExceededException {
-        switch (this.getUserType()){
+        switch (this.getUserType()) {
             case FREE:
-                if (this.getContacts().size()>= MAX_FREE_USER_CONTACTS)
+                if (this.getContacts().size() >= MAX_FREE_USER_CONTACTS)
                     throw new ContactsExceededException("Default contact size exceeded");
             case GOLD:
-                if (this.getContacts().size()>= MAX_GOLD_USER_CONTACTS)
+                if (this.getContacts().size() >= MAX_GOLD_USER_CONTACTS)
                     throw new ContactsExceededException("Default contact size exceeded");
             case PLATINUM:
-                if (this.getContacts().size()>= MAX_PLATINUM_USER_CONTACTS)
+                if (this.getContacts().size() >= MAX_PLATINUM_USER_CONTACTS)
                     throw new ContactsExceededException("Default contact size exceeded");
         }
     }
 
     private void checkBlockUser() throws BlockLimitExceededException {
-        switch (this.getUserType()){
+        switch (this.getUserType()) {
             case FREE:
-                if (this.getContacts().size()>= MAX_FREE_USER_BLOCKED_CONTACTS)
+                if (this.getContacts().size() >= MAX_FREE_USER_BLOCKED_CONTACTS)
                     throw new BlockLimitExceededException("Exceeded max contacts to be blocked");
             case GOLD:
-                if (this.getContacts().size()>= MAX_GOLD_USER_BLOCKED_CONTACTS)
+                if (this.getContacts().size() >= MAX_GOLD_USER_BLOCKED_CONTACTS)
                     throw new BlockLimitExceededException("Exceeded max contacts to be blocked");
             case PLATINUM:
-                if (this.getContacts().size()>= MAX_PLATINUM_USER_BLOCKED_CONTACTS)
+                if (this.getContacts().size() >= MAX_PLATINUM_USER_BLOCKED_CONTACTS)
                     throw new BlockLimitExceededException("Exceeded max contacts to be blocked");
         }
     }

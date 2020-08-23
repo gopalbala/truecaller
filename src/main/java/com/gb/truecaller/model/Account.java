@@ -7,6 +7,7 @@ import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.common.SocialInfo;
 import com.gb.truecaller.model.common.Tag;
+import com.gb.truecaller.model.tries.ContactTrie;
 import lombok.Getter;
 import lombok.Setter;
 import orestes.bloomfilter.CountingBloomFilter;
@@ -34,6 +35,7 @@ public abstract class Account {
     private Map<String, User> contacts;
     private CountingBloomFilter<String> blockedContacts;
     private Set<String> blockedSet;
+    private ContactTrie contactTrie;
 
     public Account() {
     }

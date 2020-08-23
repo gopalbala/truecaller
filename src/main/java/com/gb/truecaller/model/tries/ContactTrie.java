@@ -8,11 +8,10 @@ public class ContactTrie {
     private TrieNode root;
     private int indexOfSingleChild;
 
-    private ContactTrie() {
+    public ContactTrie() {
         this.root = new TrieNode("");
     }
 
-    public static ContactTrie CONTACT_TRIE = new ContactTrie();
 
     public void insert(String key) {
         TrieNode tempTrieNode = root;

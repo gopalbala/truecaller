@@ -1,5 +1,6 @@
 package com.gb.truecaller.model;
 
+import com.gb.truecaller.GlobalContacts;
 import com.gb.truecaller.exception.BlockLimitExceededException;
 import com.gb.truecaller.exception.ContactDoesNotExistsException;
 import com.gb.truecaller.exception.ContactsExceededException;
@@ -14,9 +15,9 @@ import static com.gb.truecaller.model.common.Constant.*;
 
 
 public class User extends Account {
-    private ContactTrie contactTrie = ContactTrie.CONTACT_TRIE;
 
     public User() {
+        setContactTrie(new ContactTrie());
     }
 
     public User(String phoneNumber, String firstName) {
@@ -32,10 +33,7 @@ public class User extends Account {
         setUserType(userType);
         setUserName(userName);
         setPassword(password);
-        setContact(new Contact());
-        getContact().setEmail(email);
-        getContact().setPhone(phoneNumber);
-        getContact().setCountryCode(countryCode);
+        setContact(new Contact(phoneNumber,email, countryCode));
         init(userType);
     }
 
@@ -66,8 +64,7 @@ public class User extends Account {
     public void addConcat(User user) throws ContactsExceededException {
         checkAddUser();
         getContacts().putIfAbsent(user.getPhoneNumber(), user);
-        contactTrie.insert(user.getPhoneNumber());
-        contactTrie.insert(user.getPersonalInfo().getFirstName());
+        insertToTries(user);
     }
 
     public void removeContact(String number) throws ContactDoesNotExistsException {
@@ -75,8 +72,8 @@ public class User extends Account {
         if (contact == null)
             throw new ContactDoesNotExistsException("Contact does not exist");
         getContacts().remove(number);
-        contactTrie.delete(number);
-        contactTrie.delete(contact.getPersonalInfo().getFirstName());
+        getContactTrie().delete(number);
+        getContactTrie().delete(contact.getPersonalInfo().getFirstName());
     }
 
     public void blockNumber(String number) throws BlockLimitExceededException {
@@ -176,5 +173,12 @@ public class User extends Account {
                 if (this.getContacts().size() >= MAX_PLATINUM_USER_BLOCKED_CONTACTS)
                     throw new BlockLimitExceededException("Exceeded max contacts to be blocked");
         }
+    }
+
+    private void insertToTries(User user) {
+        getContactTrie().insert(user.getPhoneNumber());
+        getContactTrie().insert(user.getPersonalInfo().getFirstName());
+        GlobalContacts.INSTANCE.getContactTrie().insert(user.getPhoneNumber());
+        GlobalContacts.INSTANCE.getContactTrie().insert(user.getPersonalInfo().getFirstName());
     }
 }

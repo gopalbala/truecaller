@@ -20,4 +20,9 @@ public class Business {
     private Contact contact;
     private PersonalInfo personalInfo;
     private SocialInfo socialInfo;
+
+    public Business(String name, Tag tag) {
+        this.businessName = name;
+        this.tag = tag;
+    }
 }

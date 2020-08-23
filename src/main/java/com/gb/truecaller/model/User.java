@@ -29,20 +29,20 @@ public class User extends Account {
         super(phoneNumber, firstName, lastName);
     }
 
-    public void register(UserType userType, String userName, String password, String email,
+    public void register(UserCategory userCategory, String userName, String password, String email,
                          String phoneNumber, String countryCode, String firstName) {
         setId(UUID.randomUUID().toString());
-        setUserType(userType);
+        setUserCategory(userCategory);
         setUserName(userName);
         setPassword(password);
         setContact(new Contact(phoneNumber, email, countryCode));
         setPersonalInfo(new PersonalInfo(firstName));
-        init(userType);
+        init(userCategory);
         insertToTries(phoneNumber, firstName);
     }
 
-    private void init(UserType userType) {
-        switch (userType) {
+    private void init(UserCategory userCategory) {
+        switch (userCategory) {
             case FREE:
                 setContacts(new HashMap<>(MAX_FREE_USER_CONTACTS));
                 setBlockedContacts(new FilterBuilder(MAX_FREE_USER_BLOCKED_CONTACTS, .01)
@@ -94,10 +94,10 @@ public class User extends Account {
         GlobalSpam.INSTANCE.reportSpam(number, this.getPhoneNumber(), reason);
     }
 
-    public void upgrade(UserType userType) {
+    public void upgrade(UserCategory userCategory) {
         int count = 0;
         int blockedCount = 0;
-        switch (userType) {
+        switch (userCategory) {
             case GOLD:
                 count = MAX_GOLD_USER_CONTACTS;
                 blockedCount = MAX_GOLD_USER_BLOCKED_CONTACTS;
@@ -152,7 +152,7 @@ public class User extends Account {
     }
 
     private void checkAddUser() throws ContactsExceededException {
-        switch (this.getUserType()) {
+        switch (this.getUserCategory()) {
             case FREE:
                 if (this.getContacts().size() >= MAX_FREE_USER_CONTACTS)
                     throw new ContactsExceededException("Default contact size exceeded");
@@ -166,7 +166,7 @@ public class User extends Account {
     }
 
     private void checkBlockUser() throws BlockLimitExceededException {
-        switch (this.getUserType()) {
+        switch (this.getUserCategory()) {
             case FREE:
                 if (this.getContacts().size() >= MAX_FREE_USER_BLOCKED_CONTACTS)
                     throw new BlockLimitExceededException("Exceeded max contacts to be blocked");

@@ -9,5 +9,5 @@ import java.util.Map;
 @Getter
 @Setter
 public class SocialInfo {
-    private Map<SocialInfo, String> socialInfo = new HashMap<>();
+    private Map<SocialProfileType, String> socialInfo = new HashMap<>();
 }

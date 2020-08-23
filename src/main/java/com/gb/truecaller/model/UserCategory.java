@@ -1,6 +1,6 @@
 package com.gb.truecaller.model;
 
-public enum UserType {
+public enum UserCategory {
     FREE,
     GOLD,
     PLATINUM

@@ -11,12 +11,9 @@ import com.gb.truecaller.model.tries.ContactTrie;
 import lombok.Getter;
 import lombok.Setter;
 import orestes.bloomfilter.CountingBloomFilter;
-import orestes.bloomfilter.FilterBuilder;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static com.gb.truecaller.model.common.Constant.*;
 
 @Getter
 @Setter
@@ -31,7 +28,7 @@ public abstract class Account {
     private PersonalInfo personalInfo;
     private SocialInfo socialInfo;
     private Business business;
-    private UserType userType;
+    private UserCategory userCategory;
     private Map<String, User> contacts;
     private CountingBloomFilter<String> blockedContacts;
     private Set<String> blockedSet;
@@ -50,7 +47,7 @@ public abstract class Account {
         this.personalInfo.setLastName(lastName);
     }
 
-    public abstract void register(UserType userType, String userName, String password,
+    public abstract void register(UserCategory userCategory, String userName, String password,
                                   String email, String phoneNumber, String countryCode,
                                   String firstName);
     public abstract void addConcat(User user) throws ContactsExceededException;
@@ -58,7 +55,7 @@ public abstract class Account {
     public abstract void blockNumber(String number) throws BlockLimitExceededException;
     public abstract void unblockNumber(String number);
     public abstract void reportSpam(String number, String reason);
-    public abstract void upgrade(UserType userType);
+    public abstract void upgrade(UserCategory userCategory);
     public abstract boolean isBlocked(String number);
     public abstract boolean canReceive(String number);
 

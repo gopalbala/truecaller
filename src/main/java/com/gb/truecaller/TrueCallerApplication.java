@@ -6,7 +6,6 @@ import com.gb.truecaller.model.*;
 import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.GlobalSpam;
 import com.gb.truecaller.model.common.Tag;
-import com.gb.truecaller.model.tries.ContactTrie;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class TrueCallerApplication {
 
         //Test case 1: Create user and register
         Account account1 = new User();
-        account1.register(UserType.FREE,"u1","pwd",
+        account1.register(UserCategory.FREE,"u1","pwd",
                 "u1@email.com","6826999256", "91", "u1");
 
         // Test case 2: Add contacts to user
@@ -31,7 +30,7 @@ public class TrueCallerApplication {
         account1.addConcat(new User("7277115893","ganapathy"));
         account1.addConcat(new User("9495010564","Bhrama"));
         account1.addConcat(new User("9844296241","Saraswathi"));
-        account1.addConcat(new User("7917949575","Veena"));
+        account1.addConcat(new User("7917949575","a.Veena"));
 
         //Test case 3: check added contacts count
         System.out.println(account1.getContacts().size());
@@ -108,7 +107,7 @@ public class TrueCallerApplication {
         System.out.println(GlobalSpam.INSTANCE.isGloballyBlocked("2782348999"));
 
         Account account2 = new User();
-        account2.register(UserType.FREE,"u2","pwd",
+        account2.register(UserCategory.FREE,"u2","pwd",
                 "u2@email.com","6826999256", "91", "u2");
 
         // Test case 13: Add contacts to user

@@ -5,8 +5,8 @@ import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.Account;
 import com.gb.truecaller.model.User;
 import com.gb.truecaller.model.UserType;
+import com.gb.truecaller.model.common.GlobalSpam;
 import com.gb.truecaller.model.tries.ContactTrie;
-import com.gb.truecaller.model.tries.TrieNode;
 
 import java.util.List;
 
@@ -37,65 +37,74 @@ public class TrueCallerApplication {
         System.out.println(account1.getContacts().size());
 
         //Test case 4: search for contacts by name
+        System.out.println("***** Getting name with prefix par ******");
         List<String> names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("par");
         for (String n: names) {
             System.out.println(n);
         }
 
         //Test case 5: search for contacts by name
-        System.out.println("*****");
+        System.out.println("***** Getting name with prefix go ******");
         names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("go");
         for (String n: names) {
             System.out.println(n);
         }
 
-        //Test case 6: search for contacts by phone
-        System.out.println("*****");
-        names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("9");
-        for (String n: names) {
-            System.out.println(n);
-        }
-
         //Test case 6a: search for contacts by phone
-        System.out.println("*****");
+        System.out.println("***** Getting numbers with prefix 9 *****");
         names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("9");
         for (String n: names) {
             System.out.println(n);
         }
 
         //Test case 6b: search for contacts by phone
-        System.out.println("*****");
+        System.out.println("***** Getting numbers with prefix 72 *****");
         names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("72");
         for (String n: names) {
             System.out.println(n);
         }
 
         //Test case 6c: search for contacts by phone
-        System.out.println("*****");
+        System.out.println("***** Getting numbers with prefix 6610448270 ***");
         names = ContactTrie.CONTACT_TRIE.allWordsWithPrefix("6610448270");
         for (String n: names) {
             System.out.println(n);
         }
 
+        System.out.println("***** Adding 3949345003, 4953904850, 2782348999 numbers *****");
         account1.addConcat(new User("3949345003","Blocked caller1"));
         account1.addConcat(new User("4953904850","Blocked caller2"));
         account1.addConcat(new User("2782348999","Junk caller3"));
 
-        System.out.println("*****");
+        System.out.println("***** Blocking 3949345003, 4953904850 numbers *****");
         //Test case 7: Block a number
         account1.blockNumber("3949345003");
+        account1.blockNumber("4953904850");
         System.out.println(account1.isBlocked("3949345003"));
 
         //Test case 8: should not receive call from blocked caller
         System.out.println( account1.canReceive("3949345003"));
 
-        System.out.println("*****");
+        System.out.println("*****Number 3949345003 is unblocked should be un blocked***");
         //Test case 9: Unblock number
         account1.unblockNumber("3949345003");
         System.out.println(account1.isBlocked("3949345003"));
 
         //Test case 10: should receive call from un blocked caller
+        System.out.println("*****Should be able to receive call from un blocked but not blocked one***");
         System.out.println( account1.canReceive("3949345003"));
+        System.out.println(account1.canReceive("4953904850"));
 
+        //Test case 11: Should be able to report spam to global list
+        System.out.println("***** reporting spam *****");
+        account1.reportSpam("2782348999","spam banker");
+        account1.reportSpam("2782348999","spam banker");
+
+        System.out.println("*** 2782348999 Number should be in global spam ***");
+        System.out.println(GlobalSpam.INSTANCE.isGlobalSpam("2782348999"));
+
+        //Test case 12: Should be able to block global spammers
+        System.out.println("*** 2782348999 Number should be in global blockedList ***");
+        System.out.println(GlobalSpam.INSTANCE.isGloballyBlocked("2782348999"));
     }
 }

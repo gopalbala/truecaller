@@ -5,7 +5,6 @@ import com.gb.truecaller.exception.ContactDoesNotExistsException;
 import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.GlobalSpam;
-import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.tries.ContactTrie;
 import orestes.bloomfilter.FilterBuilder;
 
@@ -89,7 +88,7 @@ public class User extends Account {
 
     public void reportSpam(String number, String reason) {
         getBlockedContacts().add(number);
-        GlobalSpam.INSTANCE.reportSpam(number);
+        GlobalSpam.INSTANCE.reportSpam(number, this.getPhoneNumber(), reason);
     }
 
     public void upgrade(UserType userType) {
@@ -115,7 +114,7 @@ public class User extends Account {
 
     public boolean canReceive(String number) {
         return !isBlocked(number) &&
-                !GlobalSpam.INSTANCE.isSpam(number);
+                !GlobalSpam.INSTANCE.isGlobalSpam(number);
     }
 
     private void upgradeBlockedContact(int blockedCount) {

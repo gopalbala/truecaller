@@ -32,4 +32,8 @@ public class GlobalSpam {
             globalSpam.add(number);
         }
     }
+
+    public boolean isSpam(String number) {
+        return globalBlocked.mightContain(number);
+    }
 }

@@ -7,7 +7,7 @@ import orestes.bloomfilter.FilterBuilder;
 
 import java.nio.charset.Charset;
 
-import static com.gb.truecaller.model.common.Constant.MAX_COUNT_TO_MARK_SPAM;
+import static com.gb.truecaller.model.common.Constant.MAX_COUNT_TO_MARK_GLOBAL_BLOCKED;
 import static com.gb.truecaller.model.common.Constant.MAX_GLOBAL_SPAM_COUNT;
 
 public class GlobalSpam {
@@ -25,15 +25,21 @@ public class GlobalSpam {
 
     public static GlobalSpam INSTANCE = new GlobalSpam();
 
-    public void reportSpam(String number) {
-        if (globalSpam.getEstimatedCount(number) > MAX_COUNT_TO_MARK_SPAM) {
-            globalBlocked.put(number);
+    public void reportSpam(String spamNumber, String reportingNumber, String reason) {
+        System.out.println("Send metrics here for spam Number " + spamNumber +
+                        " reported " + reportingNumber + " for reason "+ reason);
+        if (globalSpam.getEstimatedCount(spamNumber) >= MAX_COUNT_TO_MARK_GLOBAL_BLOCKED) {
+            globalBlocked.put(spamNumber);
         } else {
-            globalSpam.add(number);
+            globalSpam.add(spamNumber);
         }
     }
 
-    public boolean isSpam(String number) {
+    public boolean isGlobalSpam(String number) {
+        return globalSpam.contains(number);
+    }
+
+    public boolean isGloballyBlocked(String number) {
         return globalBlocked.mightContain(number);
     }
 }

@@ -10,9 +10,7 @@ import orestes.bloomfilter.CountingBloomFilter;
 import orestes.bloomfilter.FilterBuilder;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.gb.truecaller.model.common.Constant.*;
 
@@ -32,6 +30,7 @@ public abstract class Account {
     private UserType userType;
     private Map<String, User> contacts;
     private CountingBloomFilter<String> blockedContacts;
+    private Set<String> blockedSet;
 
     public Account( UserType userType, String userName, String password,
                    String email, String phoneNumber, String countryCode) {
@@ -52,17 +51,20 @@ public abstract class Account {
                 contacts = new HashMap<>(MAX_FREE_USER_CONTACTS);
                 blockedContacts = new FilterBuilder(MAX_FREE_USER_BLOCKED_CONTACTS, .01)
                         .buildCountingBloomFilter();
+                blockedSet = new HashSet<>(MAX_FREE_USER_BLOCKED_CONTACTS);
                 break;
             case GOLD:
                 contacts = new HashMap<>(MAX_GOLD_USER_CONTACTS);
                 blockedContacts = new FilterBuilder(MAX_GOLD_USER_BLOCKED_CONTACTS, .01)
                         .buildCountingBloomFilter();
+                blockedSet = new HashSet<>(MAX_GOLD_USER_BLOCKED_CONTACTS);
                 break;
 
             case PLATINUM:
                 contacts = new HashMap<>(MAX_PLATINUM_USER_CONTACTS);
                 blockedContacts = new FilterBuilder(MAX_PLATINUM_USER_BLOCKED_CONTACTS, .01)
                         .buildCountingBloomFilter();
+                blockedSet = new HashSet<>(MAX_PLATINUM_USER_BLOCKED_CONTACTS);
                 break;
         }
     }

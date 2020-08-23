@@ -3,24 +3,63 @@ package com.gb.truecaller.model;
 import com.gb.truecaller.exception.BlockLimitExceededException;
 import com.gb.truecaller.exception.ContactDoesNotExistsException;
 import com.gb.truecaller.exception.ContactsExceededException;
+import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.GlobalSpam;
+import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.tries.ContactTrie;
 import orestes.bloomfilter.FilterBuilder;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.gb.truecaller.model.common.Constant.*;
 
 
 public class User extends Account {
-
     private ContactTrie contactTrie = ContactTrie.CONTACT_TRIE;
 
-    public User(UserType userType, String userName, String password, String email, String phoneNumber, String countryCode) {
-        super(userType, userName, password, email, phoneNumber, countryCode);
+    public User(){}
+    public User(String phoneNumber, String firstName) {
+        super(phoneNumber, firstName);
+    }
+
+    public User(String phoneNumber, String firstName, String lastName) {
+        super(phoneNumber,firstName, lastName);
+    }
+
+    public void register(UserType userType, String userName, String password, String email, String phoneNumber, String countryCode) {
+        setId(UUID.randomUUID().toString());
+        setUserType(userType);
+        setUserName(userName);
+        setPassword(password);
+        setContact(new Contact());
+        getContact().setEmail(email);
+        getContact().setPhone(phoneNumber);
+        getContact().setCountryCode(countryCode);
+        init(userType);
+    }
+
+    private void init(UserType userType) {
+        switch (userType) {
+            case FREE:
+                setContacts(new HashMap<>(MAX_FREE_USER_CONTACTS));
+                setBlockedContacts(new FilterBuilder(MAX_FREE_USER_BLOCKED_CONTACTS, .01)
+                        .buildCountingBloomFilter());
+                setBlockedSet(new HashSet<>(MAX_FREE_USER_BLOCKED_CONTACTS));
+                break;
+            case GOLD:
+                setContacts(new HashMap<>(MAX_GOLD_USER_CONTACTS));
+                setBlockedContacts(new FilterBuilder(MAX_GOLD_USER_BLOCKED_CONTACTS, .01)
+                        .buildCountingBloomFilter());
+                setBlockedSet(new HashSet<>(MAX_GOLD_USER_BLOCKED_CONTACTS));
+                break;
+
+            case PLATINUM:
+                setContacts(new HashMap<>(MAX_PLATINUM_USER_CONTACTS));
+                setBlockedContacts(new FilterBuilder(MAX_PLATINUM_USER_BLOCKED_CONTACTS, .01)
+                        .buildCountingBloomFilter());
+                setBlockedSet(new HashSet<>(MAX_PLATINUM_USER_BLOCKED_CONTACTS));
+                break;
+        }
     }
 
     public void addConcat(User user) throws ContactsExceededException {
@@ -76,14 +115,14 @@ public class User extends Account {
 
     public boolean canReceive(String number) {
         return !isBlocked(number) &&
-         !GlobalSpam.INSTANCE.isSpam(number);
+                !GlobalSpam.INSTANCE.isSpam(number);
     }
 
     private void upgradeBlockedContact(int blockedCount) {
         setBlockedContacts(new FilterBuilder(blockedCount, .01)
                 .buildCountingBloomFilter());
         Set<String> upgradedSet = new HashSet<>();
-        for (String blocked: getBlockedSet()) {
+        for (String blocked : getBlockedSet()) {
             upgradedSet.add(blocked);
             getBlockedContacts().add(blocked);
         }

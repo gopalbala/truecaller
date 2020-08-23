@@ -35,43 +35,22 @@ public abstract class Account {
     private CountingBloomFilter<String> blockedContacts;
     private Set<String> blockedSet;
 
-    public Account( UserType userType, String userName, String password,
-                   String email, String phoneNumber, String countryCode) {
-        this.id = UUID.randomUUID().toString();
-        this.userType = userType;
-        this.userName = userName;
-        this.password = password;
-        this.contact = new Contact();
-        contact.setEmail(email);
-        contact.setPhone(phoneNumber);
-        contact.setCountryCode(countryCode);
-        init(userType);
+    public Account() {
     }
 
-    private void init(UserType userType) {
-        switch (userType){
-            case FREE:
-                contacts = new HashMap<>(MAX_FREE_USER_CONTACTS);
-                blockedContacts = new FilterBuilder(MAX_FREE_USER_BLOCKED_CONTACTS, .01)
-                        .buildCountingBloomFilter();
-                blockedSet = new HashSet<>(MAX_FREE_USER_BLOCKED_CONTACTS);
-                break;
-            case GOLD:
-                contacts = new HashMap<>(MAX_GOLD_USER_CONTACTS);
-                blockedContacts = new FilterBuilder(MAX_GOLD_USER_BLOCKED_CONTACTS, .01)
-                        .buildCountingBloomFilter();
-                blockedSet = new HashSet<>(MAX_GOLD_USER_BLOCKED_CONTACTS);
-                break;
-
-            case PLATINUM:
-                contacts = new HashMap<>(MAX_PLATINUM_USER_CONTACTS);
-                blockedContacts = new FilterBuilder(MAX_PLATINUM_USER_BLOCKED_CONTACTS, .01)
-                        .buildCountingBloomFilter();
-                blockedSet = new HashSet<>(MAX_PLATINUM_USER_BLOCKED_CONTACTS);
-                break;
-        }
+    public Account(String phoneNumber, String firstName) {
+        this.phoneNumber = phoneNumber;
+        this.personalInfo = new PersonalInfo();
+        this.personalInfo.setFirstName(firstName);
     }
 
+    public Account(String phoneNumber, String firstName, String lastName) {
+        this(phoneNumber,firstName);
+        this.personalInfo.setLastName(lastName);
+    }
+
+    public abstract void register(UserType userType, String userName, String password,
+                                  String email, String phoneNumber, String countryCode);
     public abstract void addConcat(User user) throws ContactsExceededException;
     public abstract void removeContact(String number) throws ContactDoesNotExistsException;
     public abstract void blockNumber(String number) throws BlockLimitExceededException;

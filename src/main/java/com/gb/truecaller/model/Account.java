@@ -1,5 +1,8 @@
 package com.gb.truecaller.model;
 
+import com.gb.truecaller.exception.BlockLimitExceededException;
+import com.gb.truecaller.exception.ContactDoesNotExistsException;
+import com.gb.truecaller.exception.ContactsExceededException;
 import com.gb.truecaller.model.common.Contact;
 import com.gb.truecaller.model.common.PersonalInfo;
 import com.gb.truecaller.model.common.SocialInfo;
@@ -68,4 +71,14 @@ public abstract class Account {
                 break;
         }
     }
+
+    public abstract void addConcat(User user) throws ContactsExceededException;
+    public abstract void removeContact(String number) throws ContactDoesNotExistsException;
+    public abstract void blockNumber(String number) throws BlockLimitExceededException;
+    public abstract void unblockNumber(String number);
+    public abstract void reportSpam(String number, String reason);
+    public abstract void upgrade(UserType userType);
+    public abstract boolean isBlocked(String number);
+    public abstract boolean canReceive(String number);
+
 }

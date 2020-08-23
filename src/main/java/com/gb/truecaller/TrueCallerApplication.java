@@ -136,11 +136,22 @@ public class TrueCallerApplication {
         account1.setBusiness(business);
 
         //Test case 15: getting contacts from global
-        System.out.println("******** Searching from global directory ******");
+        System.out.println("******** Case1 Searching from global directory ******");
         names = GlobalContacts.INSTANCE.getContactTrie().allWordsWithPrefix("u2");
         for (String s: names){
             System.out.println(s);
         }
 
+        System.out.println("******** Case2 Searching from global directory ******");
+        names = GlobalContacts.INSTANCE.getContactTrie().allWordsWithPrefix("ram");
+        for (String s: names){
+            System.out.println(s);
+        }
+
+        System.out.println("******** Case3 Searching from global directory ******");
+        names = GlobalContacts.INSTANCE.getContactTrie().allWordsWithPrefix("a");
+        for (String s: names){
+            System.out.println(s);
+        }
     }
 }
